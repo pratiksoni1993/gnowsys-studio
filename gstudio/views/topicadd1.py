@@ -67,12 +67,28 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from gstudio.models import *
+from gstudio.methods import *
 
-def userdashboard(request):
-    variables = RequestContext(request)
-    template = "gstudiodashboard/dashboard.html"
+def topicadd1(request,grpid):
+    errors = []
+    if request.method == 'POST':
+        if not request.POST.get('subject', ''):
+            errors.append('Enter a title.')
+        if not request.POST.get('message', ''):
+            errors.append('Enter a message.')
+        if not errors:
+  	     title=request.POST['subject']
+ 	     content=request.POST['message']
+	     idusr=request.POST['idusr']
+             tp = make_topic_object(title,int(idusr),content)
+             System.objects.get(id=int(grpid)).system_set.all()[0].gbobject_set.add(tp)
+             if  tp:
+              return HttpResponseRedirect('/nodetypes/group/gnowsys-grp/'+grpid)
+    variables = RequestContext(request,{'errors' : errors })
+    template = "gstudio/NewTopic1.html"
     return render_to_response(template, variables)
-    
+ 
 
 
     

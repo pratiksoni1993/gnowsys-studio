@@ -67,11 +67,19 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from gstudio.methods import *
 
-def userdashboard(request):
-    variables = RequestContext(request)
-    template = "gstudiodashboard/dashboard.html"
-    return render_to_response(template, variables)
+def userdashboard(request,username):
+    if request.user.username == username :
+    	meetings = Systemtype.objects.get(title="Meeting")
+        variables = RequestContext(request,{"meetings" : meetings })
+    	template = "pratikdashboard/userdashboard.html"
+    	return render_to_response(template, variables)
+    else :
+         variables = RequestContext(request)
+         template = "pratikdashboard/logindashboard.html"
+         return render_to_response(template,variables)
+
     
 
 

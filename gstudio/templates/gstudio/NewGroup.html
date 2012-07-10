@@ -1,0 +1,50 @@
+{%extends "gstudio/base.html"%}
+{%load i18n %}
+{%block extrahead%}
+        <script type="text/javascript">
+        $(document).ready(function()
+        {          
+        $('#id_value_1').datepicker();
+        $('#id_value_2').datepicker();
+        });
+        </script>
+{%endblock%}
+{% block content  %}
+{%if user.is_authenticated%}
+<h1>Time to create a new group</h1>
+{% if errors %}
+<ul>
+{% for error in errors %}
+<li><font color="red">{{ error }}</font></li>
+{% endfor %}
+</ul>
+{% endif %}
+<form action="" method="post">
+{% csrf_token %}
+<p>Title: <input type="text" name="subject"></p>
+<p>Purpose: <textarea name="message" rows="10" cols="50"></textarea></p>
+</br>
+Please Set the time for the meeting:
+</br>
+Starts at time:
+</br>
+        <span class="datetimeshortcuts">
+        	<a href="javascript:DateTimeShortcuts.openCalendar(0);"id = "calendarlink0"></a>
+        </span>
+        Date: <input id="id_value_1" type="text" class="vTimeField hasTimepicker" name="stDate" size ="8">
+        Hours:<input type = "text" name = "hours1">
+        Minutes:<input type = "text" name = "minutes1">  <hr>
+        Ends at time:   </br>
+        Date: <input id="id_value_2" type="text" class="vTimeField hasTimepicker" name="endDate" size ="8">
+        Hours:<input type = "text" name = "hours2">
+        Minutes:<input type = "text" name = "minutes2">
+<input type="hidden" value={{user.id}} name = "idusr">
+<input type="submit" value="Submit">
+</form>
+{%else%}
+<p> Sorry! Login To proceed </p>
+
+{%endif%}
+{% endblock %}
+
+

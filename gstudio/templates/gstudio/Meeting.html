@@ -1,0 +1,18 @@
+{% extends "gstudio/base.html" %}
+{% load i18n %}
+{% block content %}
+
+<address>
+<a href = "shreya@shreya.org">Ankita</a>
+</address>
+</br>
+
+{% comment %}check for the meeting type...correspondingly allow the user.is_authenticated check...also check the else tag's nesting {% endcomment %}
+{% if user.is_authenticated %}
+<h4><a href= "/nodetypes/meet/join/">Join a meeting</a></h4>
+</br>
+<h4><a href= "http://127.0.0.1:8000/nodetypes/meet/schedule">schedule a meeting</a></h4>
+{%else%}
+<p>Sorry, login to proceed</p>
+{%endif%}
+{%endblock%}

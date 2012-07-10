@@ -1,0 +1,14 @@
+{%extends "gstudio/base.html" %}
+{%load i18n%}
+{%block content%}
+<html>
+{%if user.is_authenticated%}
+Welcome to the meeting studio...!
+{%for eachmeet in meetset %}
+<p><a href="/nodetypes/meet/join/{{eachmeet.title}}/">{{eachmeet.title}}</p>
+{%endfor%}
+{%else%}
+Please login to see content
+{%endif%}
+{%endblock%}
+</html>

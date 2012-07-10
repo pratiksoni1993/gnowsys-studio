@@ -68,11 +68,13 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-def userdashboard(request):
-    variables = RequestContext(request)
-    template = "gstudiodashboard/dashboard.html"
-    return render_to_response(template, variables)
-    
-
+def logindashboard(request):
+   if request.user.is_authenticated():
+     link = u"/nodetypes/user/" + request.user.username
+     return HttpResponseRedirect(link)
+   else :
+     variables = RequestContext(request)
+     template = "pratikdashboard/logindashboard.html"
+     return render_to_response(template,variables)
 
     

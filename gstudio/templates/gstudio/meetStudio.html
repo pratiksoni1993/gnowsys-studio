@@ -1,0 +1,94 @@
+{% extends "gstudio/base.html" %}
+{% load i18n %}
+<script type="text/javascript">
+function Ajax(){
+var xmlHttp;
+	try{	
+		xmlHttp=new XMLHttpRequest();// Firefox, Opera 8.0+, Safari
+	}
+	catch (e){
+		try{
+			xmlHttp=new ActiveXObject("Msxml2.XMLHTTP"); // Internet Explorer
+		}
+		catch (e){
+		    try{
+				xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			catch (e){
+				alert("No AJAX!?");
+				return false;
+			}
+		}
+	}
+
+xmlHttp.onreadystatechange=function(){
+	if(xmlHttp.readyState==4){
+		document.getElementById('ReloadThis').innerHTML=xmlHttp.responseText;
+		setTimeout('Ajax()',10000);
+	}
+}
+xmlHttp.open("GET","http://http://127.0.0.1:8000/nodetypes/meet/join/",true);
+xmlHttp.send(null);
+}
+window.onload=function(){
+	setTimeout('Ajax()',10000);
+}
+</script>
+{% block content %}
+{% autoescape off %}
+<address>
+<a href="mailto:ankita.sarda15@gmail.com">Ankita Sarda</a>
+</address>
+{% if user.is_authenticated  %}
+	{% if later %}
+		<h3>The meeting is scheduled to begin at {{start_time}} </h3>
+		<p>The time now is {{now}}</p>
+	{% else %}
+		{%if meetover %}
+			<p>Sorry!! The meeting is over!</p>
+		{%else%}
+		<h1>Welcome to the meet Studio</h1>
+		<h4>You are Logged in as: {{user.username}}</h2>
+		<h4> This is a list of users </h2>
+		<ol>
+		{% for each in Author.objects.all %}
+			<li> {{each.username}}</li>
+		{%endfor%}
+		</ol>
+		 <ul>
+		{% for eachuser in userset  %}
+         	<li>  <h4>{{eachuser.title}}</h3></li>
+         	<div> <p> These are the messages posted by {{eachuser.title}} </p>
+          	<ol>
+			{% for eachrel in relset %}
+	                    {% if eachrel.right_subject.node.title == eachuser.title %}
+	                         {% if eachrel.relationtype.title == "message of" %}
+	                            <li> the message content is :<p> {{eachrel.left_subject.node.gbobject.content}}</p></li>  
+        	                 {% endif %}
+                	    {% endif %}
+               		{% endfor %} </ol>
+        	{% endfor %}</ul>
+		<h3>The proceedings of the meeting:</h3>
+		{%for eachmsg in sysmsg.gbobject_set.all%}
+			{{eachmsg.title}}
+			{{eachmesg.content}}
+		{%endfor%}
+		<h3>Post a new message here</h3>
+		<form method="post">
+	        {% csrf_token %}
+		<	input type="text" name="msgtopic"><label>Message topic</label>
+	        	<input 	type="text" name="msgcontent"><label>Enter content here</label>
+                	<input type="submit" value="">
+		</form>
+		<h4><a href= "/nodetypes/meet/schedule">Schedule a new meeting </a></h4>
+
+	{%endif%}
+	{%endif%}
+{% else %}
+ 
+<h2>Sorry you need to log in to see this content !</h2>
+ 
+{% endif %}
+
+{% endautoescape %}
+{% endblock %}

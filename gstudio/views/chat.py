@@ -1,3 +1,4 @@
+
 # Copyright (c) 2011,  2012 Free Software Foundation
 
 #     This program is free software: you can redistribute it and/or modify
@@ -63,15 +64,42 @@
 
 
 
+
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from gstudio.models import *
+from gstudio.methods import *
 
-def userdashboard(request):
-    variables = RequestContext(request)
-    template = "gstudiodashboard/dashboard.html"
-    return render_to_response(template, variables)
+def chatdashboard(request):
+   if request.method == "POST" :
+    boolean = False
+    rep = request.POST.get("reply",'')
+    id_no = request.POST.get("iden",'')
+    id_no1 = request.POST.get("parentid","")
+    idusr = request.POST.get("idusr",'')
+    rating = request.POST.get("star1","")
+   
+   
+    if rating :
+        rate_it(int(id_no),request,int(rating))
+
+    
+    if rep :
+    	if not id_no :
+	   	boolean = make_relation(rep,int(id_no1),int(idusr))
+    	elif not id_no1 :
+		boolean = make_relation(rep,int(id_no),int(idusr))
+    
+    
+    if boolean :
+     return HttpResponseRedirect("/nodetypes/Chatroom/")
+
+   Topic = Objecttype.objects.get(title="Topic")
+   variables = RequestContext(request,{'topic' : Topic })
+   template = "gstudio/ChatStudio.html"
+   return render_to_response(template, variables)
     
 
 

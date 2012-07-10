@@ -1,0 +1,68 @@
+
+
+
+
+{% extends "gstudio/base.html" %}
+{% load gstudio_tags %}
+{% load i18n %}
+{% block content %}
+
+
+{% if user.is_authenticated %}
+   <h>Hello Welcome to the Chat Studio</h>
+   <h>Hi <font color="blue">{{user.username}}</font></h>
+	<input type="button" value="Add a new Topic" onClick="location.href='topicadd/';">
+ 
+</br>   {% autoescape off %}
+
+
+   {% for each in topic.get_members %}
+
+      <h4><font size="5" color="red">{{each.title}}</font></h4>
+      Posted on : {{each.creation_date}}
+	Posted by : 
+   	{% for author in each.authors.all %} 
+   	{{author}}
+   	{% endfor %}</br>
+     Current rating is <h5>{{ each.rating.get_rating }}</h5>
+      {% autoescape off%}
+   <font color="green">{{each.content}}</font>
+	{%endautoescape%}
+	<form method="post" action=".">{% csrf_token %}
+         Reply to the main thread :
+    <input type="text" name = "reply">
+    <input type="hidden" value="{{each.id}}" name = "iden">
+    <input type="hidden" value="{{user.id}}" name = "idusr">
+    <input type="submit" value="Reply to Topic"></br>
+         Do you wanna rate it ? </br>
+	<input name="star1" type="radio" value=1 class="star"/>
+	<input name="star1" type="radio" value=2 class="star"/>
+	<input name="star1" type="radio" value=3 class="star"/>
+	<input name="star1" type="radio" value=4 class="star"/>
+	<input name="star1" type="radio" value=5 class="star"/>
+	<!--topic id and user id hidden fields-->
+	</br>
+	<input type="submit" value="Rate it!!!">
+         </form>   
+        <p>
+	 Replies :
+         {% show_comment each user.id %}
+	<form method="post" action=".">{% csrf_token %}
+         Reply to the main thread :
+    <input type="text" name = "reply">
+    <input type="hidden" value="{{each.id}}" name = "iden">
+    <input type="hidden" value="{{user.id}}" name = "idusr">
+    <input type="submit" value="Reply to Topic"></br>
+         </form>  
+	
+{% endfor %}
+
+{% endautoescape %}
+{% else %}
+  <h1> <p style = "color :red;">OOPS!!! Login Please!</p></h1>
+{% endif %}
+
+
+
+{% endblock %}
+
